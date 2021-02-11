@@ -8,17 +8,25 @@ int Sum(int a[], int n)
 	}
 	return sum;
 }
-int main()
+int* input(int a[], int n)
 {
-	int a[100], n;
-	printf("Enter the number of integers to be added: ");
-	scanf("%d", &n);
-	
 	printf("Enter the integers: ");
-	for(int i = 0 ; i < n ; i++)
+	for(int i = 0; i<n ; i++)
 	{
 		scanf("%d", &a[i]);
 	}
+	return a;
+}
+void output(int a[], int n)
+{
 	printf("The sum of %d different numbers is %d.\n", n, Sum(a, n));
+}
+int main()
+{
+	int a[100], n;
+	printf("Enter n: ");
+	scanf("%d", &n);
+	input(a, n);
+	output(a, n);
 	return 0;
 }
