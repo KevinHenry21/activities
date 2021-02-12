@@ -1,5 +1,6 @@
 //WAP to find the sum of n fractions.
 #include<stdio.h>
+#include<stdio.h>
 struct fractions
 {
 	int num, den;
@@ -16,11 +17,14 @@ int gcd(int a, int b)
     return gcd;
 }
 
-struct fractions input()
+struct fractions* input(struct fractions a[], int n)
 {
-    struct fractions a;
+    for(int i = 0; i<n; i++)
+    {
+        printf("Enter fraction %d: ", i+1);
+        scanf("%d%d", &a[i].num, &a[i].den);
+    }
     
-    scanf("%d%d", &a.num, &a.den);
     return a;
 }
 
@@ -64,12 +68,7 @@ int main()
     
     printf("Enter n: ");
     scanf("%d", &n);
-    
-    for(int i = 0; i<n; i++)
-    {
-        printf("Enter fraction %d: ", i+1);
-        a[i] = input();
-    }
+    input(a, n);
     
     frac_addition(n, a);
 
