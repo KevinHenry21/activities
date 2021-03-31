@@ -1,15 +1,23 @@
-//WAP to find the sum of n fractions.
 #include<stdio.h>
 #include<stdio.h>
+struct sum
+{
+    int num, den;
+};
+typedef struct sum sum;
+
 struct fractions
 {
-	int num, den;
+    int k;
+	int num[100], den[100];
+	sum sum;
 };
+typedef struct fractions fractions;
 
 int gcd(int a, int b)
 {
-	int gcd;
-	for(int i=1; i <= a && i <= b; ++i)
+	int gcd=1;
+	for(int i=2; i <= a && i <= b; ++i)
     {
         if(a % i == 0 && b % i == 0)
             gcd = i;
@@ -17,60 +25,77 @@ int gcd(int a, int b)
     return gcd;
 }
 
-struct fractions* input(struct fractions a[], int n)
+fractions input_one_fraction()
 {
-    for(int i = 0; i<n; i++)
+    fractions af;
+    scanf("%d", &af.k);
+    for(int i=0 ; i<af.k ; i++)
     {
-        printf("Enter fraction %d: ", i+1);
-        scanf("%d%d", &a[i].num, &a[i].den);
+        scanf("%d%d", &af.num[i], &af.den[i]);
     }
-    
-    return a;
+    return af;
 }
 
-void frac_addition(int n, struct fractions a[])
+void input_n_fraction(int n, fractions a[n])
 {
-    struct fractions b;
-    int res_num = 0;
-    int res_den = a[0].den;
-    for (int i = 1; i < n; i++) 
+    for(int i=0 ; i<n ; i++)
     {
-        res_den = (((a[i].den * res_den)) / (gcd(a[i].den, res_den)));
+        a[i] = input_one_fraction();
     }
-    
-    for (int i = 0; i < n; i++) 
-    {
-        res_num = res_num + (a[i].num) * (res_den / a[i].den);
-    }
-    
-    int GCD = gcd(res_num, res_den);
-    
-    b.num = res_num / GCD;
-    b.den = res_den / GCD;
-    
-    output(a, b, n);
 }
 
-void output(struct fractions a[], struct fractions b, int n)
+void compute_two_fractions(fractions *cf)
 {
-    printf("The sum of ");
-    for(int i = 0; i<n ; i++)
+    cf->sum.num = 0;
+    cf->sum.den = cf->den[0];
+    for(int i=0 ; i<cf->k ; i++)
     {
-        printf("%d/%d + ", a[i].num, a[i].den);
+        cf->sum.den = (cf->den[i] * cf->sum.den);
     }
-    printf(" is %d/%d \n", b.num, b.den);
+    for(int i=0 ; i<cf->k ; i++)
+    {
+        cf->sum.num = cf->sum.num + (cf->num[i]*(cf->sum.den / cf->den[i]));
+    }
+    
+    int GCD = gcd(cf->sum.num, cf->sum.den);
+    
+    cf->sum.num = cf->sum.num / GCD;
+    cf->sum.den = cf->sum.den / GCD;
+}
+
+void compute_n_fractions(int n, fractions af[n])
+{
+    for(int i=0 ; i<n ; i++)
+    {
+        compute_two_fractions(&af[i]);
+    }
+}
+
+void print_one_fraction(fractions pf)
+{
+    for(int i=0 ; i<pf.k ; i++)
+    {
+        printf("%d/%d + ", pf.num[i], pf.den[i]);
+    }
+    printf(" = %d/%d \n", pf.sum.num, pf.sum.den);
+}
+
+void print_n_fractions(int n, fractions af[n])
+{
+    for(int i=0 ; i<n ; i++)
+    {
+        print_one_fraction(af[i]);
+    }
 }
 
 int main()
 {
     struct fractions a[100];
     int n;
-    
     printf("Enter n: ");
     scanf("%d", &n);
-    input(a, n);
-    
-    frac_addition(n, a);
-
+    input_n_fraction(n, a);
+    compute_n_fractions(n, a);
+    print_n_fractions(n, a);
     return 0;
 }
